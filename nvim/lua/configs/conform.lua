@@ -3,6 +3,7 @@ local options = {
     typescript = { "prettierd" },
     javascript = { "prettierd" },
     -- svelte = { "prettierd" },
+    jsonls = { "prettierd" },
     vue = { "prettierd" },
     lua = { "stylua" },
     css = { "prettierd" },
@@ -11,7 +12,7 @@ local options = {
   },
   format_on_save = {
     timeout_ms = 2500,
-    lsp_fallback = true,
+    -- lsp_fallback = true,
   },
 }
 

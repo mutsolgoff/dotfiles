@@ -1,18 +1,13 @@
--- load defaults i.e lua_lsp
 require("nvchad.configs.lspconfig").defaults()
-
+local vue_language_server_path = vim.fn.expand "$MASON/packages"
+  .. "/vue-language-server"
+  .. "/node_modules/@vue/language-server"
 local lspconfig = require "lspconfig"
 
 local servers = { "html", "cssls", "tailwindcss", "eslint", "svelte" }
-local nvlsp = require "nvchad.configs.lspconfig"
 
-for _, lsp in ipairs(servers) do
-  lspconfig[lsp].setup {
-    on_attach = nvlsp.on_attach,
-    on_init = nvlsp.on_init,
-    capabilities = nvlsp.capabilities,
-  }
-end
+vim.lsp.enable(servers)
+local nvlsp = require "nvchad.configs.lspconfig"
 
 lspconfig.ts_ls.setup {
   on_attach = nvlsp.on_attach,
@@ -20,7 +15,7 @@ lspconfig.ts_ls.setup {
     plugins = {
       {
         name = "@vue/typescript-plugin",
-        location = "/path/to/@vue/language-server",
+        location = vue_language_server_path,
         languages = { "vue" },
       },
     },
@@ -35,9 +30,14 @@ lspconfig.denols.setup {
 }
 
 lspconfig.volar.setup {
+  on_attach = function(client, bufnr)
+    local opts = { buffer = bufnr, desc = "Goto Definition" }
+    vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
+  end,
   init_options = {
     vue = {
       hybridMode = false,
     },
   },
 }
+-- read :h vim.lsp.config for changing options of lsp servers
